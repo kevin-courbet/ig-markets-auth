@@ -6,7 +6,6 @@ import attr
 import httpx
 from httpx import URL
 from httpx._types import RawURL, URLTypes
-from loguru import logger
 from tenacity import retry, stop_after_attempt
 
 from . import exceptions, helpers
@@ -30,29 +29,25 @@ def _parse_expiry(response_data):
 
 
 @retry(stop=stop_after_attempt(2))
-def token_endpoint_request(request: httpx.Client, token_uri, body):
-    response = request(method="POST", url=token_uri, json=body)
+def token_endpoint_request(client: httpx.Client, token_uri, body):
+    response = client.post(url=token_uri, json=body)
     response.raise_for_status()
     return response.data
 
 
 def _refresh_token(
-    request: httpx.Client,
+    client: httpx.Client,
     token_uri: typing.Union["URL", str, RawURL],
     refresh_token: str,
-    client_id: str,
-    client_secret: str,
     scopes: str = None
 ):
     payload = {
-        "client_id": client_id,
-        "client_secret": client_secret,
         "refresh_token": refresh_token,
     }
     if scopes:
         payload["scope"] = " ".join(scopes)
 
-    response_data = token_endpoint_request(request, token_uri, payload)
+    response_data = token_endpoint_request(client, token_uri, payload)
 
     try:
         access_token = response_data["access_token"]
@@ -68,31 +63,22 @@ def _refresh_token(
 
 @attr.s
 class Credentials:
-    client_id = attr.ib(type=str)
-    client_secret = attr.ib(type=str)
     token = attr.ib(type=str)
     refresh_token = attr.ib(type=str)
     scopes = attr.ib(type=str)
     token_uri = attr.ib(type=URLTypes)
-    api_key = attr.ib(type=str)
     expiry = attr.ib(type=datetime.datetime, default=None)
 
     @classmethod
-    def with_expire_in(
+    def from_token_response(
         cls,
         token: typing.Dict,
         token_uri: URLTypes,
-        client_id: str,
-        client_secret: str,
-        api_key: str,
     ):
         return cls(
             token=token["access_token"],
             refresh_token=token.get("refresh_token"),
             token_uri=token_uri,
-            client_id=client_id,
-            client_secret=client_secret,
-            api_key=api_key,
             scopes=token.get("scope"),
             expiry=_parse_expiry(token)
         )
@@ -101,22 +87,17 @@ class Credentials:
         if (
             self.refresh_token is None
             or self.token_uri is None
-            or self.client_id is None
-            or self.client_secret is None
-            or self.api_key is None
         ):
             raise exceptions.RefreshError(
                 "The credentials do not contain the necessary fields need to "
                 "refresh the access token. You must specify refresh_token, "
-                "token_uri, client_id, client_secret, and api_key."
+                "and token_uri."
             )
 
         access_token, refresh_token, expiry, grant_response = _refresh_token(
             request,
             self.token_uri,
             self.refresh_token,
-            self.client_id,
-            self.client_secret,
             self.scopes,
         )
 
@@ -169,11 +150,9 @@ class Credentials:
             token (Optional[str]): If specified, overrides the current access
                 token.
         """
-        # update headers with the api key
         headers.update(
             {
                 'Authorization': f"Bearer {helpers.from_bytes(token or self.token)}",
-                'X-IG-API-KEY': self.credentials.API_KEY
             }
         )
 
@@ -217,8 +196,6 @@ class Credentials:
         prep = {
             "token": self.token,
             "refresh_token": self.refresh_token,
-            "username": self.username,
-            "password": self.pasword,
             "scopes": self.scopes,
         }
 

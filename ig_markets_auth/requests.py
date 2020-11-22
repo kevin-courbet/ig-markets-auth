@@ -143,8 +143,6 @@ class AuthorizedSession(httpx.Client):
             cookies=cookies,
         )
 
-#         'IG-ACCOUNT-ID': settings.ACCOUNT_ID,
-
         credential_refresh_attempt = kwargs.pop("credential_refresh_attempt", 0)
         original_headers = request.headers
         remaining_time = max_allowed_time
