@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ig-markets-auth"
-version = "1.0.0"
+version = "1.0.1"
 description = ""
 authors = ["Kevin Courbet <kevin.courbet.contact@gmail.com>"]
 
