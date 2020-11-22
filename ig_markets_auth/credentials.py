@@ -6,7 +6,7 @@ import attr
 import httpx
 from httpx import URL
 from httpx._types import RawURL, URLTypes
-from tenacity import retry, stop_after_attempt
+from loguru import logger
 
 from . import exceptions, helpers
 
@@ -28,14 +28,7 @@ def _parse_expiry(response_data):
         return None
 
 
-@retry(stop=stop_after_attempt(2))
-def token_endpoint_request(client: httpx.Client, token_uri, body):
-    response = client.post(url=token_uri, json=body)
-    response.raise_for_status()
-    return response.data
-
-
-def _refresh_token(
+def refresh_grant(
     client: httpx.Client,
     token_uri: typing.Union["URL", str, RawURL],
     refresh_token: str,
@@ -44,10 +37,12 @@ def _refresh_token(
     payload = {
         "refresh_token": refresh_token,
     }
-    if scopes:
-        payload["scope"] = " ".join(scopes)
+    # if scopes:
+    #     payload["scope"] = scopes
 
-    response_data = token_endpoint_request(client, token_uri, payload)
+    logger.debug(f"HTTP Request: POST {token_uri} {client.headers} {payload}")
+    response = client.post(url=token_uri, json=payload)
+    response_data = response.json()
 
     try:
         access_token = response_data["access_token"]
@@ -61,7 +56,7 @@ def _refresh_token(
     return access_token, refresh_token, expiry, response_data
 
 
-@attr.s
+@ attr.s
 class Credentials:
     token = attr.ib(type=str)
     refresh_token = attr.ib(type=str)
@@ -69,7 +64,7 @@ class Credentials:
     token_uri = attr.ib(type=URLTypes)
     expiry = attr.ib(type=datetime.datetime, default=None)
 
-    @classmethod
+    @ classmethod
     def from_token_response(
         cls,
         token: typing.Dict,
@@ -94,7 +89,7 @@ class Credentials:
                 "and token_uri."
             )
 
-        access_token, refresh_token, expiry, grant_response = _refresh_token(
+        access_token, refresh_token, expiry, grant_response = refresh_grant(
             request,
             self.token_uri,
             self.refresh_token,

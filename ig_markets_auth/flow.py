@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import urllib
 from typing import Dict
 
 import attr
 import httpx
-from ig_markets_auth.config import Settings
 from loguru import logger
+
+from ig_markets_auth.config import Settings
 
 from .credentials import Credentials
 from .requests import AuthorizedSession
@@ -31,7 +33,7 @@ class Flow:
     password = attr.ib(type=str)
     api_key = attr.ib(type=str)
     client = attr.ib(factory=httpx.Client, repr=False)
-    token = attr.ib(type=Dict, init=False)
+    token = attr.ib(type=Dict, default=None)
 
     def __attrs_post_init__(self):
         self.client.base_url = self.api_url
@@ -75,11 +77,13 @@ class Flow:
 
         credentials = Credentials.from_token_response(
             token=self.token,
-            token_uri=self.api_url,
+            token_uri=urllib.parse.urljoin(self.api_url, "/gateway/deal/session/refresh-token"),
         )
         return credentials
 
     def authorized_session(self):
+        if not self.token:
+            self.fetch_token()
         return AuthorizedSession(
             credentials=self.credentials,
             base_url=self.api_url,

@@ -4,7 +4,7 @@ from pydantic import AnyHttpUrl, BaseSettings
 class Settings(BaseSettings):
 
     # Backend
-    API_URL: AnyHttpUrl = "https://demo-api.ig.com/gateway/deal"
+    API_URL: AnyHttpUrl
     USERNAME: str
     PASSWORD: str
     API_KEY: str

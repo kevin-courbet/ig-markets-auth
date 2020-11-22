@@ -12,7 +12,7 @@ from loguru import logger
 
 from .credentials import Credentials
 
-DEFAULT_REFRESH_STATUS_CODES = (httpx.codes.UNAUTHORIZED,)
+DEFAULT_REFRESH_STATUS_CODES = (httpx.codes.UNAUTHORIZED, httpx.codes.FORBIDDEN,)
 """Sequence[int]:  Which HTTP status code indicate that credentials should be
 refreshed and a request should be retried.
 """
@@ -87,7 +87,7 @@ class AuthorizedSession(httpx.Client):
         self.max_refresh_attempts = max_refresh_attempts
         self.refresh_timeout = refresh_timeout
         if auth_request is None:
-            auth_request = httpx.Client(timeout=DEFAULT_TIMEOUT)
+            auth_request = httpx.Client(timeout=DEFAULT_TIMEOUT, headers=self.headers)
         self.auth_request = auth_request
 
     def request(
