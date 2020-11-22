@@ -17,9 +17,3 @@ def test_api():
     session = flow.authorized_session()
     response = session.get('/accounts', headers={'IG-ACCOUNT-ID': settings.ACCOUNT_ID})
     assert response.status_code == httpx.codes.OK
-    time.sleep(1)
-    response = session.get('/accounts', headers={'IG-ACCOUNT-ID': settings.ACCOUNT_ID})
-    assert response.status_code == httpx.codes.OK
-    time.sleep(45)
-    response = session.get('/accounts', headers={'IG-ACCOUNT-ID': settings.ACCOUNT_ID})
-    assert response.status_code == httpx.codes.OK
