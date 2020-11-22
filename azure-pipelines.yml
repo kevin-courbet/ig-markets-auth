@@ -31,6 +31,12 @@ steps:
       pip install pytest-cov
       pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
     displayName: 'Test with pytest'
+    env:
+      API_URL: $(API_URL)
+      USERNAME: $(USERNAME)
+      PASSWORD: $(PASSWORD)
+      API_KEY: $(API_KEY)
+      ACCOUNT_ID: $(ACCOUNT_ID)
 
   - task: PublishTestResults@2
     condition: succeededOrFailed()
