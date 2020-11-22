@@ -1,13 +1,9 @@
 import httpx
-from ig_markets_auth import __version__
+from ig_markets_auth.config import settings
+from ig_markets_auth.flow import Flow
 
 
 def test_api():
-    import time
-
-    from ig_markets_auth.config import settings
-    from ig_markets_auth.flow import Flow
-
     flow = Flow.from_config(config=settings)
     flow.fetch_token()
     session = flow.authorized_session()
