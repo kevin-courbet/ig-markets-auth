@@ -59,6 +59,11 @@ steps:
   - script: |
       python -m cibuildwheel --output-dir dist
 
+  - bash: |
+      python3 -m pip install --upgrade pip
+      pip3 install cibuildwheel==1.6.4
+      cibuildwheel --output-dir dist .
+
   - task: TwineAuthenticate@1
     displayName: "Twine Authenticate"
     inputs:
