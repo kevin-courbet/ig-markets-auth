@@ -53,6 +53,12 @@ steps:
       poetry build --format wheel
     displayName: "Build artifact"
 
+  - script: |
+      python -m pip install cibuildwheel==1.6.4
+    
+  - script: |
+      python -m cibuildwheel --output-dir dist
+
   - task: TwineAuthenticate@1
     displayName: "Twine Authenticate"
     inputs:
