@@ -59,5 +59,7 @@ steps:
       artifactFeed: "Osiris/Osiris"
 
   - script: |
-      python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.whl
-      python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.tar.gz
+      python3 -m pip install colorama
+      python3 -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.whl
+      python3 -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.tar.gz
+    displayName: 'upload packages to Azure repo'
