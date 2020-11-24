@@ -40,13 +40,6 @@ steps:
       API_KEY: $(API_KEY)
       ACCOUNT_ID: $(ACCOUNT_ID)
 
-  - task: PublishTestResults@2
-    condition: succeededOrFailed()
-    inputs:
-      testResultsFiles: '**/test-*.xml'
-      testRunTitle: 'Publish test results for Python $(python.version)'
-
-
   - script: |
       poetry build --format wheel
       poetry build --format sdist
@@ -59,7 +52,7 @@ steps:
       poetry add -D cibuildwheel==1.6.4
       poetry run python -m cibuildwheel --output-dir dist .
     displayName: 'Install cibuildwheel and create windows wheels'
-
+    
   - task: TwineAuthenticate@1
     displayName: "Twine Authenticate"
     inputs:
