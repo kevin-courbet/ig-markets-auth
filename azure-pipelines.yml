@@ -45,11 +45,7 @@ steps:
     inputs:
       testResultsFiles: '**/test-*.xml'
       testRunTitle: 'Publish test results for Python $(python.version)'
-  - task: PublishCodeCoverageResults@1
-    inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-      reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+
 
   - script: |
       poetry build --format wheel
@@ -62,6 +58,7 @@ steps:
   - bash: |
       poetry add -D cibuildwheel==1.6.4
       poetry run python -m cibuildwheel --output-dir dist .
+    displayName: 'Install cibuildwheel and create windows wheels'
 
   - task: TwineAuthenticate@1
     displayName: "Twine Authenticate"
