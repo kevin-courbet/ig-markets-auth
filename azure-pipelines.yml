@@ -45,21 +45,20 @@ steps:
       poetry build --format sdist
     displayName: "Build artifact"
   
-  - task: PublishBuildArtifacts@1
-    inputs: {pathtoPublish: 'dist'}
-
   - bash: |
       poetry add -D cibuildwheel==1.6.4
       poetry run python -m cibuildwheel --output-dir dist .
     displayName: 'Install cibuildwheel and create windows wheels'
     
+  - task: PublishBuildArtifacts@1
+    inputs: {pathtoPublish: 'dist'}
+
   - task: TwineAuthenticate@1
     displayName: "Twine Authenticate"
     inputs:
       artifactFeed: "Osiris/Osiris"
 
   - script: |
-      python3 -m pip install colorama
-      python3 -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.whl
-      python3 -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.tar.gz
+      python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.whl
+      python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.tar.gz
     displayName: 'upload packages to Azure repo'
