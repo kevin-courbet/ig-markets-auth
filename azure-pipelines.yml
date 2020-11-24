@@ -5,6 +5,8 @@
 
 trigger:
   - master
+variables:
+  CIBW_BUILD: cp3*-win_amd64
 
 pool:
   vmImage: "ubuntu-latest"
@@ -51,6 +53,7 @@ steps:
 
   - script: |
       poetry build --format wheel
+      poetry build --format sdist
     displayName: "Build artifact"
   
   - task: PublishBuildArtifacts@1
@@ -67,3 +70,4 @@ steps:
 
   - script: |
       python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.whl
+      python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.tar.gz
