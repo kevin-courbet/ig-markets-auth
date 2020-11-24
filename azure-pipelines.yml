@@ -21,7 +21,6 @@ steps:
       python -m pip install poetry twine
       poetry config virtualenvs.create false
       poetry install
-
     displayName: "Install dependencies"
 
   - script: |
@@ -40,16 +39,11 @@ steps:
       API_KEY: $(API_KEY)
       ACCOUNT_ID: $(ACCOUNT_ID)
 
-  # - script: |
-  #     poetry build --format wheel
-  #     poetry build --format sdist
-  #   displayName: "Build artifact"
-  
-  - bash: |
-      poetry add -D cibuildwheel==1.6.4
-      poetry run python -m cibuildwheel --output-dir dist .
-    displayName: 'Install cibuildwheel and create windows wheels'
-    
+  - script: |
+      poetry build --format wheel
+      poetry build --format sdist
+    displayName: "Build artifact"
+     
   - task: PublishBuildArtifacts@1
     inputs: {pathtoPublish: 'dist'}
 
@@ -59,6 +53,5 @@ steps:
       artifactFeed: "Osiris/Osiris"
 
   - script: |
-      python -m pip install twine colorama
       python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*
     displayName: 'upload packages to Azure repo'
