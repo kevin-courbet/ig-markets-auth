@@ -6,7 +6,7 @@
 trigger:
   - master
 variables:
-  CIBW_BUILD: cp3*-win_amd64
+  CIBW_BUILD: cp37-win_amd64
 
 pool:
   vmImage: "ubuntu-latest"
@@ -60,6 +60,5 @@ steps:
 
   - script: |
       python -m pip install twine colorama
-      python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.whl
-      python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*.tar.gz
+      python -m twine upload -r Osiris --config-file $(PYPIRC_PATH) dist/*
     displayName: 'upload packages to Azure repo'
