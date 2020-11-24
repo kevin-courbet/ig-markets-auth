@@ -40,10 +40,10 @@ steps:
       API_KEY: $(API_KEY)
       ACCOUNT_ID: $(ACCOUNT_ID)
 
-  - script: |
-      poetry build --format wheel
-      poetry build --format sdist
-    displayName: "Build artifact"
+  # - script: |
+  #     poetry build --format wheel
+  #     poetry build --format sdist
+  #   displayName: "Build artifact"
   
   - bash: |
       poetry add -D cibuildwheel==1.6.4
