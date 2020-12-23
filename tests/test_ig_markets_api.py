@@ -4,7 +4,8 @@ from ig_markets_auth.flow import Flow
 
 
 def test_api():
-    flow = Flow.from_config(config=Settings())
+    settings = Settings()
+    flow = Flow.from_config(config=settings)
     flow.fetch_token()
     session = flow.authorized_session()
     response = session.get('/accounts', headers={'IG-ACCOUNT-ID': settings.ACCOUNT_ID})
