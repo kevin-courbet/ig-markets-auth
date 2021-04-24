@@ -14,7 +14,8 @@ readme = ''
 setup(
     long_description=readme,
     name='ig-markets-auth',
-    version='1.0.4',
+    version='1.0.5',
+    description='Authentication for IG Markets REST and Streaming APIs',
     python_requires='==3.*,>=3.7.0',
     author='Kevin Courbet',
     author_email='kevin.courbet.contact@gmail.com',
@@ -22,9 +23,13 @@ setup(
     package_dir={"": "."},
     package_data={},
     install_requires=[
-        'attrs==20.*,>=20.3.0', 'autopep8==1.*,>=1.5.4', 'flake8==3.*,>=3.8.4',
-        'httpx==0.*,>=0.16.1', 'loguru==0.*,>=0.5.3',
+        'attrs==20.*,>=20.3.0', 'httpx==0.*,>=0.16.1', 'loguru==0.*,>=0.5.3',
         'pydantic[dotenv,email]==1.*,>=1.7.2'
     ],
-    extras_require={"dev": ["ipykernel==5.*,>=5.3.4", "pytest==6.*,>=6.1.2"]},
+    extras_require={
+        "dev": [
+            "autopep8==1.*,>=1.5.4", "flake8==3.*,>=3.8.4",
+            "ipykernel==5.*,>=5.3.4", "pytest==6.*,>=6.1.2"
+        ]
+    },
 )
