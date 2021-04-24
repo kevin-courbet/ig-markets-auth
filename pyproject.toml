@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "ig-markets-auth"
 version = "1.0.5"
+description = "Authentication for IG Markets REST and Streaming APIs"
 authors = ["Kevin Courbet <kevin.courbet.contact@gmail.com>"]
 
 [tool.poetry.dependencies]
