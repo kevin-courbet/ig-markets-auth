@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ig-markets-auth"
-version = "1.0.5"
+version = "1.0.6"
 description = "Authentication for IG Markets REST and Streaming APIs"
 authors = ["Kevin Courbet <kevin.courbet.contact@gmail.com>"]
 
@@ -12,10 +12,11 @@ pydantic = {extras = ["email", "dotenv"], version = "^1.7.2"}
 loguru = "^0.5.3"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.8.4"
+flake8 = "==3.*,>=3.8.4"
 pytest = "==6.*,>=6.1.2"
-autopep8 = "^1.5.4"
+autopep8 = "==1.*,>=1.5.4"
 ipykernel = "==5.*,>=5.3.4"
+
 
 
 [tool.dephell.main]
