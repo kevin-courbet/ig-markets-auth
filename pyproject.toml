@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "ig-markets-auth"
-version = "1.0.6"
+version = "1.0.7"
 description = "Authentication for IG Markets REST and Streaming APIs"
 authors = ["Kevin Courbet <kevin.courbet.contact@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "==3.7.*"
+python = ">=3.7"
 attrs = "*"
 httpx = "*"
 pydantic = {extras = ["email", "dotenv"], version = "*"}
@@ -16,26 +16,6 @@ flake8 = "*"
 pytest = "*"
 autopep8 = "*"
 ipykernel = "*"
-
-
-
-[tool.dephell.main]
-from = {format = "poetry", path = "pyproject.toml"}
-to = {format = "setuppy", path = "setup.py"}
-versioning = "semver"
-
-[tool.dephell.lock]
-from = {format = "poetry", path = "pyproject.toml"}
-to = {format = "poetrylock", path = "poetry.lock"} 
-
-[tool.dephell.pytest]
-# read dependencies from poetry format
-from = {format = "poetry", path = "pyproject.toml"}
-# copy files that are required for tests
-tests = ["tests"]
-python = "3.7"
-# run command `pytest`
-command = "pytest -x tests/"
 
 [build-system]
 requires = [
